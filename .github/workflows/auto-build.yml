@@ -4,6 +4,9 @@ on:
   schedule:
     # 每天定时检查更新 (UTC 00:00，北京时间 08:00)
     - cron: '0 0 * * *'
+  push:
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       force_version:
