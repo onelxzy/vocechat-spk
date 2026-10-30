@@ -1,6 +1,6 @@
 # VoceChat Synology DSM 7.x SPK 套件自动化监控与构建
 
-[![Auto Monitor & Build VoceChat SPK](https://github.com/OWNER/REPO/actions/workflows/auto-build.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/auto-build.yml)
+[![Auto Monitor & Build VoceChat SPK](https://github.com/onelxzy/vocechat-spk/actions/workflows/auto-build.yml/badge.svg)](https://github.com/onelxzy/vocechat-spk/actions/workflows/auto-build.yml)
 
 本项目用于为群晖 DSM 7.x 系统自动监控并打包 **[VoceChat](https://github.com/Privoce/vocechat-server-rust)** 最新服务端的 `.spk` 安装包，支持 **无损平滑升级**（自动保留所有聊天数据、用户、文件与自定义配置）。
 
