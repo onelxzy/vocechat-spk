@@ -1,0 +1,9 @@
+output/
+downloads/
+build_tmp_*/
+__pycache__/
+*.pyc
+*.zip
+*.spk
+.DS_Store
+Thumbs.db

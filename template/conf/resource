@@ -1,0 +1,1 @@
+{"data-share":{"shares":[{"name":"VoceChat","permission":{"rw":["vocechat-server"]}}]},"port-config":{"protocol-file":"app/vocechat-server.sc"},"systemd-unit":{}}

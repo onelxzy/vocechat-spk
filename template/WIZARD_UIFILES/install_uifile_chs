@@ -1,0 +1,10 @@
+[
+    {
+        "step_title": "VoceChat 安装说明",
+        "items": [
+            {
+                "desc": "VoceChat 主目录所在的共享文件夹为：<strong style='color:red'>VoceChat</strong><br><br><strong style='color:red'>删除或修改该文件夹名称将导致功能异常！（只允许修改所在存储空间）</strong>" 
+            }
+        ]
+    }
+]

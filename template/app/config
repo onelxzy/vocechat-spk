@@ -1,0 +1,13 @@
+{
+    ".url": {
+        "SYNO.SDS.VoceChat.Application": {
+            "title": "VoceChat",
+            "desc": "VoceChat Web UI",
+            "icon": "images/icon_{0}.png",
+            "type": "url",
+            "protocol": "http",
+            "port": "3009",
+            "allUsers": false
+        }
+    }
+}

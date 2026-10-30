@@ -1,0 +1,7 @@
+{
+    "defaults": {
+        "run-as": "package"
+    },
+    "username": "vocechat-server",
+    "groupname": "vocechat-server"
+}

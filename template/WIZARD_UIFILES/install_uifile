@@ -1,0 +1,10 @@
+[
+    {
+        "step_title": "VoceChat installation information",
+        "items": [
+            {
+                "desc": "The shared folder used as the VoceChat home directory is <strong style='color:red'>VoceChat</strong>.<br><br><strong style='color:red'>Deleting or renaming this folder will cause the service to malfunction. Only its storage volume may be changed.</strong>"
+            }
+        ]
+    }
+]

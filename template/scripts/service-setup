@@ -1,0 +1,89 @@
+### Generic variables and functions
+### -------------------------------
+
+if [ -z "${SYNOPKG_PKGNAME}" ] || [ -z "${SYNOPKG_DSM_VERSION_MAJOR}" ]; then
+  echo "Error: Environment variables are not set." 1>&2;
+  echo "Please run me using synopkg instead. Example: \"synopkg start [packagename]\"" 1>&2;
+  exit 1
+fi
+
+
+USER="vocechat-server"
+EFF_USER="vocechat-server"
+
+# Service port
+SERVICE_PORT="3009"
+
+# start-stop-status script redirect stdout/stderr to LOG_FILE
+LOG_FILE="${SYNOPKG_PKGVAR}/${SYNOPKG_PKGNAME}.log"
+
+# Service command has to deliver its pid into PID_FILE
+PID_FILE="${SYNOPKG_PKGVAR}/${SYNOPKG_PKGNAME}.pid"
+
+### Package specific variables and functions
+### ----------------------------------------
+
+SVC_CWD="${SYNOPKG_PKGDEST}"
+SERVICE_COMMAND="./vocechat-server"
+SVC_BACKGROUND=y
+SVC_WRITE_PID=y
+SVC_WAIT_TIMEOUT=120
+
+service_preupgrade ()
+{
+    echo "Backing up VoceChat configuration before upgrade..."
+    if [ -d "${SYNOPKG_PKGDEST}/config" ]; then
+        if [ -n "${SYNOPKG_TEMP_UPGRADE_FOLDER}" ] && [ -d "${SYNOPKG_TEMP_UPGRADE_FOLDER}" ]; then
+            mkdir -p "${SYNOPKG_TEMP_UPGRADE_FOLDER}/config_backup"
+            cp -af "${SYNOPKG_PKGDEST}/config/." "${SYNOPKG_TEMP_UPGRADE_FOLDER}/config_backup/" 2>/dev/null || true
+        fi
+        if [ -n "${SYNOPKG_PKGVAR}" ] && [ -d "${SYNOPKG_PKGVAR}" ]; then
+            mkdir -p "${SYNOPKG_PKGVAR}/config_backup"
+            cp -af "${SYNOPKG_PKGDEST}/config/." "${SYNOPKG_PKGVAR}/config_backup/" 2>/dev/null || true
+        fi
+    fi
+}
+
+service_postupgrade ()
+{
+    echo "Restoring VoceChat configuration after upgrade..."
+    CFG_BACKUP=""
+    if [ -n "${SYNOPKG_TEMP_UPGRADE_FOLDER}" ] && [ -d "${SYNOPKG_TEMP_UPGRADE_FOLDER}/config_backup" ]; then
+        CFG_BACKUP="${SYNOPKG_TEMP_UPGRADE_FOLDER}/config_backup"
+    elif [ -n "${SYNOPKG_PKGVAR}" ] && [ -d "${SYNOPKG_PKGVAR}/config_backup" ]; then
+        CFG_BACKUP="${SYNOPKG_PKGVAR}/config_backup"
+    fi
+
+    if [ -n "${CFG_BACKUP}" ]; then
+        if [ -f "${CFG_BACKUP}/config.toml" ]; then
+            echo "Preserving existing config.toml"
+            cp -af "${CFG_BACKUP}/config.toml" "${SYNOPKG_PKGDEST}/config/config.toml"
+        fi
+        if [ -f "${CFG_BACKUP}/config-tls.toml" ]; then
+            echo "Preserving existing config-tls.toml"
+            cp -af "${CFG_BACKUP}/config-tls.toml" "${SYNOPKG_PKGDEST}/config/config-tls.toml"
+        fi
+        if [ -d "${CFG_BACKUP}/templates" ]; then
+            cp -rn "${CFG_BACKUP}/templates/." "${SYNOPKG_PKGDEST}/config/templates/" 2>/dev/null || true
+        fi
+        rm -rf "${SYNOPKG_PKGVAR}/config_backup" 2>/dev/null || true
+    fi
+
+    chmod 0755 "${SYNOPKG_PKGDEST}/vocechat-server" 2>/dev/null || true
+}
+
+service_postinst ()
+{
+    chmod 0755 "${SYNOPKG_PKGDEST}/vocechat-server" 2>/dev/null || true
+}
+
+service_prestart ()
+{
+    chmod 0755 "${SYNOPKG_PKGDEST}/vocechat-server" 2>/dev/null || true
+    if [ -f "${SYNOPKG_PKGDEST}/config/config.toml" ]; then
+        if ! grep -q "data_dir" "${SYNOPKG_PKGDEST}/config/config.toml"; then
+            echo "Warning: data_dir missing in config.toml, fixing..."
+            sed -i '/\[system\]/a data_dir = "/var/packages/vocechat-server/shares/VoceChat/data"' "${SYNOPKG_PKGDEST}/config/config.toml"
+        fi
+    fi
+}

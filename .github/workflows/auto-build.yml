@@ -1,0 +1,45 @@
+name: Auto Monitor & Build VoceChat SPK
+
+on:
+  schedule:
+    # 每天定时检查更新 (UTC 00:00，北京时间 08:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      force_version:
+        description: '指定构建版本 (如 v0.5.39，留空则自动检测官方最新版)'
+        required: false
+        default: ''
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Check Upstream & Build SPK
+        id: check_build
+        run: |
+          python check_and_build.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE_VERSION: ${{ github.event.inputs.force_version }}
+
+      - name: Publish Release
+        if: steps.check_build.outputs.new_version == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.check_build.outputs.tag_name }}
+          name: ${{ steps.check_build.outputs.release_name }}
+          body: ${{ steps.check_build.outputs.release_body }}
+          files: output/*.spk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
