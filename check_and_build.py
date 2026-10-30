@@ -92,24 +92,24 @@ def main():
         sys.exit(res.returncode)
 
     # 4. Prepare release notes
-    release_body = f"""## VoceChat Server {target_tag} 群晖 DSM 7.x 安装包
+    release_body = f"""## VoceChat Server {target_tag} Synology DSM 7.x 套件安装包
 
-基于官方上游 [{UPSTREAM_REPO}](https://github.com/{UPSTREAM_REPO}/releases/tag/{target_tag}) 自动构建发布。
+本安装包由自动化流程基于官方上游 [{UPSTREAM_REPO}](https://github.com/{UPSTREAM_REPO}/releases/tag/{target_tag}) 预编译二进制打包发布。
 
-### 📦 套件安装包下载
+### 📦 安装包下载
 - **`vocechat-server_{target_tag}_x86_64.spk`**: 适用于 Intel / AMD x86_64 架构机型
-- **`vocechat-server_{target_tag}_arm64.spk`**: 适用于 Realtek / Rockchip 等 ARM64 架构机型
+- **`vocechat-server_{target_tag}_arm64.spk`**: 适用于 ARM64 架构机型（如 RTD1296 / RTD1619B 等）
 
-### 🚀 特性与说明
-- **无损升级支持**：自动继承历史数据（存储在 `/var/packages/vocechat-server/shares/VoceChat/data` 共享文件夹）。
-- **配置持久化保护**：升级时自动备份并还原用户的自定义配置与邮件模板。
-- **权限安全沙箱**：基于 DSM 7 规范以非 root 专有系统用户 `package:vocechat-server` 运行。
-- **纯净安全**：编译构建过程 100% 由 GitHub Actions 自动化沙盒执行，二进制直接溯源自官方 Release，不含任何第三方修改或私有信息。
+### 🌟 套件特性
+- **数据持久化隔离**：数据与消息库保存在群晖 `VoceChat` 共享文件夹，套件升级不影响业务数据。
+- **配置持久化保护**：升级时自动备份并平滑迁移自定义配置（`config.toml`）与邮件模板。
+- **安全运行沙箱**：基于 DSM 7 规范以系统受限用户 `package:vocechat-server` 运行。
+- **默认服务端口**：`3009`（可配合群晖内置反向代理启用 HTTPS）。
 """
 
     set_github_output("new_version", "true")
     set_github_output("tag_name", target_tag)
-    set_github_output("release_name", f"VoceChat Server {target_tag} 群晖 SPK")
+    set_github_output("release_name", f"VoceChat Server {target_tag} (Synology DSM 7.x)")
     set_github_output("release_body", release_body)
     print("\nCheck and build finished successfully!")
 

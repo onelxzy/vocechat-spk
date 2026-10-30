@@ -193,7 +193,7 @@ def build_spk(version, arch, zip_path, output_dir):
     with open(os.path.join(TEMPLATE_DIR, "INFO.template"), "r", encoding="utf-8") as f:
         info_tmpl = f.read()
 
-    changelog_str = f"1. 更新 VoceChat 服务端到 v{clean_version}<br>2. 支持无损平滑升级，自动保留聊天历史、用户数据及配置<br>3. 增强升级时配置保护机制"
+    changelog_str = f"1. 更新 VoceChat 服务端核心至 v{clean_version}<br>2. 优化群晖 DSM 7.x 兼容性与配置恢复机制"
     info_rendered = info_tmpl.format(
         version=clean_version,
         arch=arch_cfg["syno_arch"],
